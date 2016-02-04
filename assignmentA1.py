@@ -5,8 +5,17 @@ Made by:	Philip Bouman, 10668667
 
 This program takes a corpus, splits the words and proccesses them. Given the input (corpus, n and m) it makes
 an n-gram model of the corpus and shows the m number of sequences with the highest frequencies. This program
-also shows the sum of the frequencies of the sequences.
-"""
+also shows the sum of the frequencies of the sequences. 
+
+Run the program with the following lines:
+
+For unigrams: python3 assignment1.py -corpus [CORPUS] -n 1 -m 10 
+For bigrams: python3 assignment1.py -corpus [CORPUS] -n 2 -m 10 	
+For trigrams: python3 assignment1.py -corpus [CORPUS] -n 3 -m 10 
+
+NOTE: [CORPUS] is the name of the corpus-file
+
+""" 
 #!/usr/bin/env python3 
 from urllib import request	
 from collections import Counter
