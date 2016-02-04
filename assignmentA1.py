@@ -1,3 +1,12 @@
+"""
+Made by:	Philip Bouman, 10668667
+		Danny Dijkzeul, 10554386
+		Kaj Meijer, 10509534
+
+This program takes a corpus, splits the words and proccesses them. Given the input (corpus, n and m) it makes
+an n-gram model of the corpus and shows the m number of sequences with the highest frequencies. This program
+also shows the sum of the frequencies of the sequences.
+"""
 #!/usr/bin/env python3 
 from urllib import request	
 from collections import Counter
@@ -5,24 +14,24 @@ import re
 import argparse
 
 def split_into_array(string):
-	words = re.split("\W+", string)
+	words = re.split("\W+", string) #splits  words
 	return words
 
 def counter_list(list):
 	model = Counter() #makes decitonaty 0, if not exists
 	sumOfFreq = 0
 	if args.n == 1:
-		for i in list:
+		for i in list: # makes unigram
 			model[i] += 1
 			sumOfFreq += 1		
-	elif args.n == 2:
-		for i in range(0,len(list) -1):
+	elif args.n == 2: # makes bigram 
+		for i in range(0,len(list) -1): # -1 to prevent index out of range
 			string = list[i] + " " + list[i+1]
 			model[string] += 1
 			sumOfFreq += 1
-	elif args.n == 3:
-		for i in range(0,len(list) - 2):
-			string = list[i] + " " + list[i+1] + " " + list[i+2]
+	elif args.n == 3: # makes trigram
+		for i in range(0,len(list) - 2): # -2 to prevent index out of range 
+			string = list[i] + " " + list[i+1] + " " + list[i+2] 
 			model[string] += 1
 			sumOfFreq += 1
 	else:
