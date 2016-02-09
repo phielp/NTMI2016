@@ -95,9 +95,25 @@ if __name__ == '__main__':
 		print("bla")
 	elif args.perm_file:
 		perm_sens = get_perm_sens(args.perm_file, args.n)
-		print(perm_sens)
-		total_ngrams = [x[i:args.n+i] for x in perm_sens for i in range(len(perm_sens[0]))]
-		print(total_ngrams)
+		# print(perm_sens)
+
+		total_ngrams = [x[i:args.n+i] for x in perm_sens for i in range(len(perm_sens[0])-1)] # added -1 at the end
+		print(total_ngrams, '\n')
+		
+		# convert list of tuples to list of lists
+		# dat had ik begrepen dat nodig was
+		perm_array = []
+		for i in range(0,len(total_ngrams)):
+			list_in_list = list(total_ngrams[i])
+			perm_array.append(list_in_list)
+
+		print(perm_array)
+
+		# calc_prop met de array van permutation bigrams
+		# niet 100% wat er hier moet gebeuren
+		print(calc_prop(perm_array, model_n, model_n_min_one, args.n))
+
+
 		#perm_sens = [perm_sens[i:args.n+i] for i in range(len(perm_sens)-(args.n))]
 		#print(perm_sens)
 
@@ -112,7 +128,7 @@ if __name__ == '__main__':
 	# prop_array = [prop_array[i*n: (i*n)+n] for i in range(n - 1)] 
 	# makes lists with lists of length n part 2
 
-	prop_dict = calc_prop(prop_array, model_n, model_n_min_one, args.n)
+	# prop_dict = calc_prop(prop_array, model_n, model_n_min_one, args.n)
 
 	# print(prop_dict)
 
