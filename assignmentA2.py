@@ -42,16 +42,17 @@ if __name__ == '__main__':
 	parser.add_argument("-corpus",  dest = 'corpus')
 	parser.add_argument("-n", type = int)
 	parser.add_argument("-conditional-prob-file", dest = 'prop_file')
+	parser.add_argument("-sequence-prob-file", dest = 'seq_file')
+	parser.add_argument("-scored-permutations", dest = 'perm_file')
 	args = parser.parse_args()
 
-	corpus = open(args.corpus, 'r') 
-	# corpus_read = corpus.read().replace('\n', ' ') For part 2
-	corpus_read = corpus.read().replace('\n\n', ' </s>'*(args.n-1) + '><'+ '<s> '*(args.n-1))
 
+	corpus = open(args.corpus, 'r') 
+	
+	corpus_read = corpus.read().replace('\n\n', ' </s>'*(args.n-1) + '><'+ '<s> '*(args.n-1))
 
 	prop_file = open(args.prop_file, 'r') 
 	
-	# prop_read = prop_file.read().replace('\n', ' ') For part 2
 	prop_read = prop_file.read().replace('\n', ' </s>'*(args.n-1) + '><'+ '<s> '*(args.n-1))
 	
 	corpus_array = split_into_array(corpus_read)
@@ -88,6 +89,7 @@ if __name__ == '__main__':
 
 	print(perm_sen)
 	print(len(per_sen))
+
 	# # print(Counter(model_n).most_common(10)) 
 	#For part 1
 
