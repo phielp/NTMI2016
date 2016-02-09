@@ -6,62 +6,68 @@ import argparse
 import itertools
 
 def split_into_array(string):
-	words = re.split("\s+|><", string) #splits words
+	#splits words in array 
+	words = re.split("\s+|><", string) 
 	return words
 
-def split_paragraphs(string):
-	par = re.split ("\><", string)
-	return par
-
 def counter_list(unigram, n):
-	model = Counter(zip(*[unigram[i:] for i in range(n)]))
+	# makes a n gram model using the unigram model given n
+	model = Counter(zip(*[unigram[i:] for i in range(n)])) 
 	return model
 
 def get_prop_array(prop_file,n):
+	# opens propfile
 	prop_file = open(prop_file, 'r') 
-
+	# replaces every /n with n - 1 times <s> in the begin and </s> in the end
 	prop_read = prop_file.read().replace('\n', ' </s>'*(n-1) + '><'+ '<s> '*(n-1))
-
+	# splits file into an array
 	prop_array = split_into_array(prop_read) 
 
+	# deletes </s> if it is the first element, same for <s> if it is the last
 	if prop_array[0] == '</s>':
 		del prop_array[0:(n)]
 	if prop_array[n] == '<s>':
 		del prop_array[(len(prop_array)-n):len(prop_array)]
 
+	# creates a list containing lists of with length n 
 	prop_array = [prop_array[i:n+i] for i in range(len(prop_array)-(n))]
-
+	close(prop_file)
 	return prop_array
 
 def get_perm_sens(perm_file, n):
+	# opens perm_file
 	perm_array = open(perm_file, 'r')
-	
+	# read perm_file
 	perm_read = perm_array.read()
-
+	# splits file into array
 	perm_array = split_into_array(perm_read)
-
-	perms = tuple(itertools.permutations(perm_array)) #permutatie functie voor opdracht 4
+	# generates permutations of the elements of perm_array
+	perms = tuple(itertools.permutations(perm_array)) 
 	start = tuple(['<s>'])
 	end = tuple(['</s>'])
-
+	# makes lists of perms and adds start and end symbols to the sentences
 	perm_sens = [start*(args.n-1) + perms[i] + end*(args.n-1) for i in range(len(perms))]
-
+	close(perm_file)
 	return perm_sens
 
 
 def calc_prop(prop_array, model_n, model_n_min_one, n):
 	
-
+	# set default value
 	prop_value = 1
 	prop_value_array = []
 
+	# takes every n gram form prop_array
 	for i in prop_array:
 		prop_n = model_n[tuple(i)]
 		prop_n_min_one = model_n_min_one[tuple(i[0:(n -1)])]
+		# checks for empty propabilty 
 		if prop_n_min_one != 0:
+			# calculates propabilty of i
 			prop_w = prop_n/prop_n_min_one 
 		else:
 			prop_w = 0
+		# checks for new sentence start and resets propabilty of the new sentence
 		if i[0:2] == ["</s>","<s>"]:
 			
 			prop_value_array.append(prop_value)
@@ -75,7 +81,7 @@ def calc_prop(prop_array, model_n, model_n_min_one, n):
 
 if __name__ == '__main__':
 
-	parser = argparse.ArgumentParser(add_help=False)
+	parser = argparse.ArgumentParser(add_help = False)
 
 	parser.add_argument("-corpus", dest = 'corpus')
 	parser.add_argument("-n", type = int)
@@ -84,15 +90,15 @@ if __name__ == '__main__':
 	parser.add_argument("-scored-permutations", dest = 'perm_file')
 	args = parser.parse_args()
 
-
+	# opens corpus
 	corpus = open(args.corpus, 'r') 
-
+	# replaces every \n\n with n - 1 times <s> in the begin and </s> in the end
 	corpus_read = corpus.read().replace('\n\n', ' </s>'*(args.n-1) + '><'+ '<s> '*(args.n-1))
-
+	# puts file into array
 	corpus_array = split_into_array(corpus_read)
-
+	# makes n gram for given n
 	model_n = counter_list(corpus_array,args.n)
-
+	# makes n - 1 gram for given n
 	model_n_min_one = counter_list(corpus_array,(args.n-1))
 
 	if args.prop_file:
