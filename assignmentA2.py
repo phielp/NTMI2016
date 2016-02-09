@@ -27,7 +27,6 @@ def get_prop_array(prop_file,n):
 	if prop_array[1] == '</s>': 
 		del prop_array[0:(n)]
 	if prop_array[len(prop_array)-2] == '<s>':
-		print("test")
 		del prop_array[(len(prop_array)-n)+1:len(prop_array)]
 		
 	prop_array = [prop_array[i:n+i] for i in range(len(prop_array)-(n))]
@@ -97,10 +96,7 @@ if __name__ == '__main__':
 	# print(prop_array)
 
 	# prop_array = [prop_array[i*n: (i*n)+n] for i in range(n - 1)] 
-	# makes lists with lists of length n part 2
-
-	prop_dict = calc_prop(prop_array, model_n, model_n_min_one, args.n)
-	
+	# makes lists with lists of length n part 2	
 	# print(prop_dict)
 
 	perm_array = ['I', 'do', 'not', 'know']
