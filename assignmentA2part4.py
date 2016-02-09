@@ -50,21 +50,27 @@ def get_perm_sens(perm_file, n):
 
 
 def calc_prop(prop_array, model_n, model_n_min_one, n):
+	
 
-
-	prop_dict = {}
+	prop_value = 1
+	prop_value_array = []
 
 	for i in prop_array:
 		prop_n = model_n[tuple(i)]
 		prop_n_min_one = model_n_min_one[tuple(i[0:(n -1)])]
-	if prop_n_min_one != 0:
-		prop_w = prop_n/prop_n_min_one 
-	else:
-		prop_w = 0
+		if prop_n_min_one != 0:
+			prop_w = prop_n/prop_n_min_one 
+		else:
+			prop_w = 0
+		if i[0:2] == ["</s>","<s>"]:
+			
+			prop_value_array.append(prop_value)
+			prop_value = 1
+			prop_w = 1
+		prop_value *= prop_w
 
-	prop_dict[tuple(i)] = prop_w
-
-	return prop_dict
+	prop_value_array.append(prop_value)	
+	return prop_value_array
 
 
 if __name__ == '__main__':
@@ -98,7 +104,7 @@ if __name__ == '__main__':
 		# print(perm_sens)
 
 		total_ngrams = [x[i:args.n+i] for x in perm_sens for i in range(len(perm_sens[0])-1)] # added -1 at the end
-		print(total_ngrams, '\n')
+		# print(total_ngrams, '\n')
 		
 		# convert list of tuples to list of lists
 		# dat had ik begrepen dat nodig was
@@ -107,12 +113,11 @@ if __name__ == '__main__':
 			list_in_list = list(total_ngrams[i])
 			perm_array.append(list_in_list)
 
-		print(perm_array)
+			# calc_prop met de array van permutation bigrams
+			# niet zeker of dit klopt
+			print(calc_prop(perm_array, model_n, model_n_min_one, args.n))
 
-		# calc_prop met de array van permutation bigrams
-		# niet 100% wat er hier moet gebeuren
-		print(calc_prop(perm_array, model_n, model_n_min_one, args.n))
-
+		# print(perm_array)
 
 		#perm_sens = [perm_sens[i:args.n+i] for i in range(len(perm_sens)-(args.n))]
 		#print(perm_sens)
