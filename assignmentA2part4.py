@@ -112,10 +112,11 @@ if __name__ == '__main__':
 		for i in range(0,len(total_ngrams)):
 			list_in_list = list(total_ngrams[i])
 			perm_array.append(list_in_list)
+			print(perm_array)
 
 			# calc_prop met de array van permutation bigrams
 			# niet zeker of dit klopt
-			print(calc_prop(perm_array, model_n, model_n_min_one, args.n))
+			# print(calc_prop(perm_array, model_n, model_n_min_one, args.n))
 
 		# print(perm_array)
 
