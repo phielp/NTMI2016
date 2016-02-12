@@ -15,9 +15,13 @@ def split_into_array(string):
 
 
 # P + 1 = (n-gram count + 1) / 
-# 	(total number of tokens + 1 * total number of types)
+# 	(total number of tokens + total number of types)
 def add_one_smoothing(model_n):
-	
+	for i, j in model_n.items():
+		j = j + 1
+
+	return model_n	
+
 
 
 
@@ -37,7 +41,7 @@ if __name__ == '__main__':
 
 	model_n = counter_list(corpus_array,args.n)
 
-	add_one_smoothing(model_n)
+	model_one = add_one_smoothing(model_n)
 
-	print(model_n)
+	print(model_one)
 
