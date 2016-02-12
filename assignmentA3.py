@@ -16,9 +16,11 @@ def split_into_array(string):
 # Add-one smoothing:
 # P + 1 = (n-gram count + 1) / 
 # 	(total number of tokens + total number of types)
-def calc_prop(model_n, unigram, n):
+def add_one_smoothing(model_n, unigram, n):
 
 	v = len(unigram)
+
+	print(Counter(model_n).most_common(10))	
 
 	for i, j  in model_n.items():
 		prop_n = model_n[i]
@@ -31,12 +33,38 @@ def calc_prop(model_n, unigram, n):
 	print(Counter(model_n).most_common(10))	
 	return model_n
 
+# Good-Turing smoothing:
+# frequency of frequencies for k <= 5
+def good_turing_smoothing(model_n):
+	n1 = 0
+	n2 = 0
+	n3 = 0
+	n4 = 0
+	n5 = 0
+
+	for i, j in model_n.items():
+		
+		if model_n[i] <= 5:
+			if model_n[i] == 1:
+				n1 += 1
+			if model_n[i] == 2:
+				n2 += 1	
+			if model_n[i] == 3:
+				n3 += 1
+			if model_n[i] == 4:
+				n4 += 1	
+			if model_n[i] == 5:
+				n5 += 1			
+
+	print(str(n1) + ", " + str(n2) + ", " + str(n3) + ", " + str(n4) + ", " + str(n5))	
+	return model_n	
+
 
 if __name__ == '__main__':
 
 	parser = argparse.ArgumentParser(add_help = False)
 
-	parser.add_argument("-corpus",  dest = 'corpus')
+	parser.add_argument("-train-corpus",  dest = 'corpus')
 	parser.add_argument("-n", type = int)
 	args = parser.parse_args()
 
@@ -50,5 +78,7 @@ if __name__ == '__main__':
 
 	unigram = counter_list(corpus_array,args.n-1)
 
-	calc_prop(model_n, unigram, args.n)
+	# add_one_smoothing(model_n, unigram, args.n)	# run add-one
+
+	good_turing_smoothing(model_n)	# run good-turing
 
