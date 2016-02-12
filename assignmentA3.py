@@ -13,13 +13,30 @@ def split_into_array(string):
 	words = re.split("\s+|><", string) #splits  words
 	return words
 
+def calc_prop(model_n, unigram, n):
+
+	v = len(unigram)
+
+	print(Counter(model_n).most_common(10))	
+
+	for i, j  in model_n.items():
+		prop_n = model_n[i]
+		prop_n_min_one = unigram[i[0:(n -1)]]
+		if prop_n_min_one != 0:
+			model_n[i] = (prop_n + 1) / (prop_n_min_one + v)
+		else:
+			model_n[i] = 0
+
+	print(Counter(model_n).most_common(10))	
+	return model_n
 
 # P + 1 = (n-gram count + 1) / 
 # 	(total number of tokens + total number of types)
-def add_one_smoothing(model_n):
+def add_one_smoothing(model_n, n, v):
 	for i, j in model_n.items():
-		j = j + 1
-
+		model_n[i] += 1
+	print(n)
+	print(v)
 	return model_n	
 
 
@@ -41,7 +58,15 @@ if __name__ == '__main__':
 
 	model_n = counter_list(corpus_array,args.n)
 
-	model_one = add_one_smoothing(model_n)
+	unigram = counter_list(corpus_array,args.n-1)
 
-	print(model_one)
+
+	calc_prop(model_n, unigram, args.n)
+
+	# model_one = add_one_smoothing(model_n, len(counter_list(corpus_array, 2)), len(counter_list(corpus_array, 1)))
+
+	# print(model_one)
+
+	# print(len(model_n)) # N
+
 
