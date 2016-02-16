@@ -36,29 +36,34 @@ def add_one_smoothing(model_n, unigram, n):
 # Good-Turing smoothing:
 # frequency of frequencies for k <= 5
 def good_turing_smoothing(model_n):
-	n1 = 0
-	n2 = 0
-	n3 = 0
-	n4 = 0
-	n5 = 0
 
+	n_counts = [0,0,0,0,0,0]
+	
+	# count
 	for i, j in model_n.items():
 		
 		if model_n[i] <= 5:
 			if model_n[i] == 1:
-				n1 += 1
+				n_counts[1] +=1
 			if model_n[i] == 2:
-				n2 += 1	
+				n_counts[2] +=1
 			if model_n[i] == 3:
-				n3 += 1
+				n_counts[3] +=1
 			if model_n[i] == 4:
-				n4 += 1	
+				n_counts[4] +=1
 			if model_n[i] == 5:
-				n5 += 1			
+				n_counts[5] +=1		
 
-	print(str(n1) + ", " + str(n2) + ", " + str(n3) + ", " + str(n4) + ", " + str(n5))	
+	# MLE count for Nc 
+	print(n_counts)
+	# print(model_n)
+	# smoothed count c*
+	for i, j in model_n.items():
+		if model_n[i] <= 5:
+			smoothed = (model_n[i] + 1) * ((n_counts[model_n[i]] + 1) / n_counts[model_n[i]])
+
+		print(smoothed)
 	return model_n	
-
 
 if __name__ == '__main__':
 
