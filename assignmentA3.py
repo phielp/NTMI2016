@@ -16,6 +16,8 @@ def split_into_array(string):
 # Add-one smoothing:
 # P + 1 = (n-gram count + 1) / 
 # 	(total number of tokens + total number of types)
+
+# Adds one occurance to every type to avoid zero-values
 def add_one_smoothing(model_n, unigram, n):
 
 	v = len(unigram)
@@ -35,6 +37,8 @@ def add_one_smoothing(model_n, unigram, n):
 
 # Good-Turing smoothing:
 # frequency of frequencies for k <= 5
+
+# Lowers the probability of n_1 to n_5 in order to create mass for n_0
 def good_turing_smoothing(model_n):
 
 	n_counts = [0,0,0,0,0,0,0]
@@ -42,9 +46,10 @@ def good_turing_smoothing(model_n):
 	adj_counts = []
 
 	for i, j in model_n.items():
-		
+		# Total number of bigrams
 		n_total += model_n[i]
-
+ 
+		# Counts how much bigrams occur i times
 		if model_n[i] <= 6:
 			if model_n[i] == 1:
 				n_counts[1] +=1
@@ -56,6 +61,7 @@ def good_turing_smoothing(model_n):
 				n_counts[4] +=1
 			if model_n[i] == 5:
 				n_counts[5] +=1
+			# For a later calculation
 			if model_n[i] == 6:
 				n_counts[6] +=1				
 
@@ -63,6 +69,7 @@ def good_turing_smoothing(model_n):
 	adj_counts.append(uncounted)		
 	print(uncounted)			
 
+	# C_star calculation for bigrams that occured 1 to 5 times
 	for i in range(1, 6):
 
 		k = 5
@@ -80,9 +87,10 @@ def good_turing_smoothing(model_n):
 
 	return adj_counts	
 
+# Reads a file and makes an array of words out of it
 def read_file(train_file, n):
 	train = open(train_file, 'r') 
-	
+	# Replaces a white line with a start and end symbol
 	train_read = train.read().replace('\n\n', ' </s>'*(n-1) + '><'+ '<s> '*(n-1))
 
 	file_array = split_into_array(train_read)
@@ -98,16 +106,16 @@ if __name__ == '__main__':
 	parser.add_argument("-n", type = int)
 	args = parser.parse_args()
 
-	train_array = read_file(args.train, args.n)
+	if args.train:
+		train_array = read_file(args.train, args.n)
+		train_model = counter_list(train_array, args.n)
+		unigram = counter_list(train_array,args.n-1)
+	
 	if args.test:
 		test_array = read_file(args.test, args.n)
 		test_model = counter_list(test_array, args.n)
 
-	unigram = counter_list(train_array,args.n-1)
-	train_model = counter_list(train_array, args.n)
-	
-
 	add_one_smoothing(train_model, unigram, args.n)	# run add-one
 
-	# good_turing_smoothing(model_n)	# run good-turing
+	good_turing_smoothing(train_model)	# run good-turing
 
