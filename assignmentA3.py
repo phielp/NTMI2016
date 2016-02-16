@@ -37,11 +37,14 @@ def add_one_smoothing(model_n, unigram, n):
 # frequency of frequencies for k <= 5
 def good_turing_smoothing(model_n):
 
-	n_counts = [0,0,0,0,0,0]
-	
-	# count
+	n_counts = [0,0,0,0,0,0,0]
+	n_total = 0
+	adj_counts = []
+
 	for i, j in model_n.items():
 		
+		n_total += model_n[i]
+
 		if model_n[i] <= 5:
 			if model_n[i] == 1:
 				n_counts[1] +=1
@@ -52,17 +55,29 @@ def good_turing_smoothing(model_n):
 			if model_n[i] == 4:
 				n_counts[4] +=1
 			if model_n[i] == 5:
-				n_counts[5] +=1		
+				n_counts[5] +=1
+			if model_n[i] == 6:
+				n_counts[6] +=1				
 
-	# MLE count for Nc 
-	print(n_counts)
-	# print(model_n)
-	# smoothed count c*
-	for i, j in model_n.items():
-		if model_n[i] <= 5:
-			smoothed = (model_n[i] + 1) * ((n_counts[model_n[i]] + 1) / n_counts[model_n[i]])
+	uncounted = n_counts[1] / n_total	# zero frequency in training
+	adj_counts.append(uncounted)		
+	print(uncounted)			
 
-		print(smoothed)
+	for i in range(1, 5):
+
+		k = 5
+
+		a = (i + 1) * (n_counts[i+1]) / (n_counts[i])
+		b = (i * (k + 1) * n_counts[k+1]) / n_counts[1]
+		c = (1 - (k + 1) * n_counts[k+1] / n_counts[1])
+
+		c_star = a - b / c
+
+		adj_counts.append(c_star)
+
+	print(n_total)
+	print(adj_counts)
+
 	return model_n	
 
 if __name__ == '__main__':
