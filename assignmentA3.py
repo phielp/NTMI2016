@@ -73,8 +73,6 @@ def good_turing_smoothing(model_n):
 
 		c_star = a - b / c
 
-		
-
 		adj_counts.append(c_star)
 
 	print(n_total)
@@ -82,8 +80,8 @@ def good_turing_smoothing(model_n):
 
 	return adj_counts	
 
-def read_file(train, n):
-	train = open(train, 'r') 
+def read_file(train_file, n):
+	train = open(train_file, 'r') 
 	
 	train_read = train.read().replace('\n\n', ' </s>'*(n-1) + '><'+ '<s> '*(n-1))
 
@@ -101,13 +99,15 @@ if __name__ == '__main__':
 	args = parser.parse_args()
 
 	train_array = read_file(args.train, args.n)
-	test_array = read_file(args.test, args.n)
+	if args.test:
+		test_array = read_file(args.test, args.n)
+		test_model = counter_list(test_array, args.n)
 
 	unigram = counter_list(train_array,args.n-1)
 	train_model = counter_list(train_array, args.n)
-	test_model = counter_list(test_array, args.n)
+	
 
-	add_one_smoothing(model_n, unigram, args.n)	# run add-one
+	add_one_smoothing(train_model, unigram, args.n)	# run add-one
 
 	# good_turing_smoothing(model_n)	# run good-turing
 
