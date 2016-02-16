@@ -104,6 +104,7 @@ if __name__ == '__main__':
 	parser.add_argument("-train-corpus",  dest = 'train')
 	parser.add_argument("-test-corpus", dest = 'test')
 	parser.add_argument("-n", type = int)
+	parser.add_argument("-smoothing", dest = 'smoothing')
 	args = parser.parse_args()
 
 	if args.train:
@@ -115,7 +116,8 @@ if __name__ == '__main__':
 		test_array = read_file(args.test, args.n)
 		test_model = counter_list(test_array, args.n)
 
-	add_one_smoothing(train_model, unigram, args.n)	# run add-one
-
-	good_turing_smoothing(train_model)	# run good-turing
+	if args.smoothing == 'add1':
+		add_one_smoothing(train_model, unigram, args.n)	# run add-one
+	if args.smoothing == 'gt':
+		good_turing_smoothing(train_model)	# run good-turing
 
