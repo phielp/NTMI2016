@@ -45,7 +45,7 @@ def good_turing_smoothing(model_n):
 		
 		n_total += model_n[i]
 
-		if model_n[i] <= 5:
+		if model_n[i] <= 6:
 			if model_n[i] == 1:
 				n_counts[1] +=1
 			if model_n[i] == 2:
@@ -63,7 +63,7 @@ def good_turing_smoothing(model_n):
 	adj_counts.append(uncounted)		
 	print(uncounted)			
 
-	for i in range(1, 5):
+	for i in range(1, 6):
 
 		k = 5
 
@@ -73,32 +73,41 @@ def good_turing_smoothing(model_n):
 
 		c_star = a - b / c
 
+		
+
 		adj_counts.append(c_star)
 
 	print(n_total)
 	print(adj_counts)
 
-	return model_n	
+	return adj_counts	
+
+def read_file(train, n):
+	train = open(train, 'r') 
+	
+	train_read = train.read().replace('\n\n', ' </s>'*(n-1) + '><'+ '<s> '*(n-1))
+
+	file_array = split_into_array(train_read)
+
+	return file_array
 
 if __name__ == '__main__':
 
 	parser = argparse.ArgumentParser(add_help = False)
 
-	parser.add_argument("-train-corpus",  dest = 'corpus')
+	parser.add_argument("-train-corpus",  dest = 'train')
+	parser.add_argument("-test-corpus", dest = 'test')
 	parser.add_argument("-n", type = int)
 	args = parser.parse_args()
 
-	corpus = open(args.corpus, 'r') 
-	
-	corpus_read = corpus.read().replace('\n\n', ' </s>'*(args.n-1) + '><'+ '<s> '*(args.n-1))
+	train_array = read_file(args.train, args.n)
+	test_array = read_file(args.test, args.n)
 
-	corpus_array = split_into_array(corpus_read)
+	unigram = counter_list(train_array,args.n-1)
+	train_model = counter_list(train_array, args.n)
+	test_model = counter_list(test_array, args.n)
 
-	model_n = counter_list(corpus_array,args.n)
+	add_one_smoothing(model_n, unigram, args.n)	# run add-one
 
-	unigram = counter_list(corpus_array,args.n-1)
-
-	# add_one_smoothing(model_n, unigram, args.n)	# run add-one
-
-	good_turing_smoothing(model_n)	# run good-turing
+	# good_turing_smoothing(model_n)	# run good-turing
 
