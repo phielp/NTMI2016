@@ -5,6 +5,7 @@ import re
 import argparse
 import itertools
 
+
 def counter_list(unigram, n):
 	model = Counter(zip(*[unigram[i:] for i in range(n)]))
 	return model
@@ -87,6 +88,34 @@ def good_turing_smoothing(model_n):
 
 	return adj_counts	
 
+def calc_prop(test_model, train_model, adj_counts):
+
+	k = 5
+	# bigram in test model en in train model, hoe vaak in train model?
+	adj_model = []
+
+	for i in test_model:
+		check = False
+		for j, k in train_model.items():
+			if i == j:
+				# print(i, j, k)
+
+				if k <= 5:
+					adj_model.append([i, adj_counts[k]])
+				else:
+					adj_model.append([i, k])
+				check = True
+		if check == False:
+			# print(i, 0)
+			adj_model.append([i, adj_counts[0]])
+			
+	print(adj_model)	
+					
+
+
+	
+
+
 # Reads a file and makes an array of words out of it
 def read_file(train_file, n):
 	train = open(train_file, 'r') 
@@ -119,5 +148,5 @@ if __name__ == '__main__':
 	if args.smoothing == 'add1':
 		add_one_smoothing(train_model, unigram, args.n)	# run add-one
 	if args.smoothing == 'gt':
-		good_turing_smoothing(train_model)	# run good-turing
-
+		adj_counts = good_turing_smoothing(train_model)	# run good-turing
+		calc_prop(test_model, train_model, adj_counts)
