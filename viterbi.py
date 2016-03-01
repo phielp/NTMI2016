@@ -1,62 +1,58 @@
-import re
-import argparse
-import itertools
+def viterbi(observations, states, start, transition, emission):
+	# Vocabulary
+	V = [{}]
 
-# transitionMatrix = [[1, 0.7, 0.5], [0, 0.3, 0.5]]
-# outputMatrix = [[0.6, 0.1], [0.1, 0.7], [0.3, 0.2]]
-transitionMatrix = [[1, 0], [0.5, 0.5], [0.7, 0.3]]
-outputMatrix = [[0.6, 0.3, 0.1], [0.1, 0.2, 0.7]]
+	# initialization step, first column
+	for i in states:
+		V[0][i] = start[i] * emission[i][observations[0]]	
 
-n = 3
-v = 2
+	for words in range(1, len(observations)):
+		# extend Vocabulary with new column
+		V.append({})
 
+		# calculate next step values
+		for j in states:
+			
+			# tuple containing all values
+			probabilities = ()
 
+			# generate all possible probabilities
+			for k in states:
+				(probability, state) = (V[words-1][k] * transition[k][j] 
+					* emission[j][observations[words]], k)
+				probabilities = (probability, ) + probabilities
 
-# words
-# O_1.....O_t
-observations = []
+			# choose highest and add to Vocabulary
+			V[words][j] = max(probabilities)
 
-# q_1.....q_n
-states = []
+		# probability of best path
+		max_prob = max(V[-1].values())
 
-def viterbi(transitionMatrix, outputMatrix):
-	chart = []
-	column = []
-	viterbi = []
+		# states of best path
+		path = []
+		for step in V:
+			for state, prob in step.items():
+				if (step[state] == max(step.values())):
+					path.append(state)
 
-	# print(transitionMatrix[0][0])
-	# print(outputMatrix[0][0])
-
-	i = 0
-	# initialization step (first column)
-	for j in range(0, len(outputMatrix)):
-		# print(transitionMatrix[i][j])
-		# print(outputMatrix[i][j])
-		multiple = transitionMatrix[i][j] * outputMatrix[i][j]
-		column.append(multiple)	
-
-	viterbi.append(column)
+	# show results
+	print('vocabulary: ', V)	
+	print('path: ', path)
+	print('prob: ', max_prob)
 	
+# data
+observations = ('x', 'z', 'y')
+states = ('q_1', 'q_2')
 
-	for i in range(0, len(transitionMatrix)):
-		print(viterbi[i])
-		# for j in range(0, len(outputMatrix)):
-		# 	result = viterbi[i][j] * transitionMatrix[i][j] * outputMatrix[i][j]
+start = {'q_1': 1, 'q_2': 0}
 
+transition = {'q_1': {'q_1': 0.7, 'q_2': 0.3}, 
+			  'q_2': {'q_1': 0.5, 'q_2': 0.5}}
 
+emission = {'q_1': {'x': 0.6, 'y': 0.1, 'z': 0.3},
+			'q_2': {'x': 0.1, 'y': 0.7, 'z': 0.2}}	
 
+# run
+viterbi(observations, states, start, transition, emission)	
 
-
-	# # recursion step (second...N columns)
-	# for i in range (0, v-1):
-	# 	for j in range(0, len(outputMatrix[0])-1):
-	# 		transition = transitionMatrix[i][n]
-	# 		n += 1
-	# 		output = outputMatrix[len(outputMatrix)-1][0]
-	# 		multiple = output * transition
-	# 		print(multiple)
-	# 		chart.append([chart[0][0] * output * transition])
-
-	# print(chart)
-
-viterbi(transitionMatrix,outputMatrix)	
+		  
