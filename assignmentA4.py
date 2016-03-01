@@ -38,7 +38,7 @@ def whoooooooo(tag_array, word_tag_model):
 		tag_value = tag_counter[tag_key] + 1
 		word_tag_value = word_tag_counter[key]
 		word_tag_counter[key] = word_tag_value/tag_value
-	print(word_tag_counter)
+	return word_tag_counter
 		
 
 
@@ -110,11 +110,65 @@ if __name__ == '__main__':
 	# print(Counter(tag_model).most_common(10))
 	
 	word_tag_array = word_tag_file(train, args.n)
-	print(Counter(tag_array).most_common(20))
 	word_tag_model = counter_list_wt(word_tag_array)
-	print(Counter(word_tag_model).most_common(20))
 	dinges = door_de_kreng(word_tag_model)
 
 
-	# woopwoop = whoooooooo(tag_array, word_tag_model)
+	woopwoop = whoooooooo(tag_array, word_tag_model)
 	woop = whoooooooo(tag_array, tag_model)
+
+	Tags = []
+
+	# sentence = open(args.sentence, 'r') 
+
+	# sentence_array = split_into_array(sentence.read())
+
+	sentence_array = ["Just",'as', 'you', 'can', 'yell', "the"]
+
+	for j in sentence_array:
+		
+		new_Tags = dinges[j]
+
+		for i in new_Tags:
+			if i not in Tags:
+				Tags.append(i)
+			print(Tags)
+	states = tuple(Tags)
+
+	observations = tuple(sentence_array)
+
+
+	start_probability = {}
+
+	transition_probability = {}
+
+
+
+	dict = {}		
+	j = 0
+	while(j < len(states) ):
+		dict.update({states[j]: woop["START",states[j]] } )
+		j += 1
+	transition_probability.update({"START": dict})
+
+
+	for i in range(0, len(states)):
+
+		dict = {}		
+		j = 0
+		while(j < len(states) ):
+			dict.update({states[j]: woop[states[i],states[j]] } )
+			j += 1
+			
+		transition_probability.update({states[i]: dict})
+	print(transition_probability)
+
+	emission_probability = {}
+		
+	for i in states:
+		dict = {} 
+		for j in observations:
+			dict.update({j: woopwoop[i,j]})
+		emission_probability.update({i: dict})	
+	print(emission_probability)
+
