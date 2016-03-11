@@ -1,0 +1,6 @@
+(ROOT ( (S^ROOT (NNP Ms.) (@NP->_NNP (NNP Haag))) (@S->_NP (VP (VBZ plays) (@VP->_VBZ (NP (NNP Elianti)))) (@S->_VP (. .)))))
+
+
+
+(ROOT ( (S^ROOT (NNP Rolls-Royce) (@NP->_NNP (NNP Motor) (@NP->_NNP (NNPS Cars) (@NP->_NNPS (NNP Inc.))))) (@S->_NP (VP (VBD said) (@VP->_VBD (SBAR (SBAR^VP (S^SBAR (PRP it)) (@S->_NP (VP (VBZ expects) (@VP->_VBZ (S (S^VP (PRP$ its) (@NP->_PRP$ (NNP U.S.) (@NP->_NNP (NNS sales)))) (@S->_NP (VP (TO to) (@VP->_TO (VP (VB remain) (@VP->_VB (ADJP (JJ steady)) (@VP->_ADJP (PP (IN at) (@PP->_IN (NP (NP^PP (IN about) (@QP->_IN (CD 1,200))) (@NP->_QP (NNS cars))))) (@VP->_PP (PP (IN in) (@PP->_IN (NP (CD 1990))))))))))))))))))) (@S->_VP (. .)))))
+
